@@ -1,5 +1,3 @@
-declare module "svgo/dist/svgo.browser.js";
-
 interface SVGEntry {
   name: string;
   originalSVG: string;

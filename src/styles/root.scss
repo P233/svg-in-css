@@ -1,3 +1,99 @@
+:root {
+  color-scheme: light dark;
+
+  --font-sans:
+    system-ui, -apple-system, blinkmacsystemfont, "Segoe UI", roboto, "Helvetica Neue", arial, sans-serif,
+    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  --font-mono:
+    ui-monospace, "SF Mono", sfmono-regular, menlo, monaco, "Cascadia Code", "JetBrains Mono", consolas,
+    "Liberation Mono", monospace;
+  --bg-canvas: #f4f5f8;
+  --bg-grid-dot: rgb(15 23 42 / 8%);
+  --bg-surface: #fff;
+  --bg-subtle: #f1f3f7;
+  --bg-hover: #e7eaf1;
+  --bg-active: #dce0ea;
+  --bg-code: #fff;
+  --bg-overlay: rgb(244 245 248 / 82%);
+  --border-subtle: #e2e5ee;
+  --border-control: #cfd5e2;
+  --border-strong: #b8c0d2;
+  --text-primary: #111521;
+  --text-secondary: #43495e;
+  --text-muted: #5b6178;
+  --accent: #4f46e5;
+  --accent-hover: #4338ca;
+  --accent-text: #4f46e5;
+  --accent-fg: #fff;
+  --accent-soft: rgb(79 70 229 / 9%);
+  --accent-border: rgb(79 70 229 / 28%);
+  --toggle-off: #bfc6d6;
+  --tile-light-bg: #f1f3f7;
+  --tile-light-hover-bg: #fff;
+  --tile-light-border: rgb(15 23 42 / 10%);
+  --tile-dark-bg: #181b28;
+  --tile-dark-hover-bg: #181b28;
+  --tile-dark-border: rgb(15 23 42 / 20%);
+  --success: #047857;
+  --status-dot: #10b981;
+  --danger: #be123c;
+  --danger-soft: rgb(190 18 60 / 9%);
+  --shadow-card: 0 1px 2px rgb(15 23 42 / 5%), 0 8px 24px -6px rgb(15 23 42 / 6%);
+  --shadow-control: 0 1px 2px rgb(15 23 42 / 4%);
+  --shadow-float: 0 20px 40px -12px rgb(15 23 42 / 18%);
+  --syntax-base: #363c52;
+  --syntax-selector: #1d4ed8;
+  --syntax-property: #be185d;
+  --syntax-function: #6d28d9;
+  --syntax-string: #047857;
+  --syntax-comment: #636980;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-canvas: #0a0b10;
+    --bg-grid-dot: rgb(148 163 184 / 10%);
+    --bg-surface: #12141d;
+    --bg-subtle: #181b26;
+    --bg-hover: #212534;
+    --bg-active: #2a2f42;
+    --bg-code: #0e1017;
+    --bg-overlay: rgb(10 11 16 / 82%);
+    --border-subtle: #232738;
+    --border-control: #2e344a;
+    --border-strong: #3b425e;
+    --text-primary: #f1f3f9;
+    --text-secondary: #a8b0c8;
+    --text-muted: #7c84a3;
+    --accent: #585ce5;
+    --accent-hover: #4f46e5;
+    --accent-text: #818cf8;
+    --accent-fg: #fff;
+    --accent-soft: rgb(99 102 241 / 15%);
+    --accent-border: rgb(129 140 248 / 36%);
+    --toggle-off: #323850;
+    --tile-light-bg: #e6e9f2;
+    --tile-light-hover-bg: #eef0f7;
+    --tile-light-border: rgb(255 255 255 / 16%);
+    --tile-dark-bg: #1c2030;
+    --tile-dark-hover-bg: #24293d;
+    --tile-dark-border: rgb(255 255 255 / 12%);
+    --success: #047857;
+    --status-dot: #10b981;
+    --danger: #fb7185;
+    --danger-soft: rgb(251 113 133 / 14%);
+    --shadow-card: 0 1px 3px rgb(0 0 0 / 40%), 0 14px 34px -6px rgb(0 0 0 / 55%);
+    --shadow-control: 0 1px 2px rgb(0 0 0 / 25%);
+    --shadow-float: 0 24px 48px -12px rgb(0 0 0 / 70%);
+    --syntax-base: #c8cee8;
+    --syntax-selector: #60a5fa;
+    --syntax-property: #f472b6;
+    --syntax-function: #c084fc;
+    --syntax-string: #34d399;
+    --syntax-comment: #7d85a6;
+  }
+}
+
 *,
 *::before,
 *::after {
@@ -5,39 +101,35 @@
 }
 
 html {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji",
-    "Segoe UI Emoji", "Segoe UI Symbol";
+  font-family: var(--font-sans);
   font-size: 16px;
-  line-height: 1;
+  line-height: 1.5;
   text-size-adjust: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 ::selection {
-  background: #dfdff9;
+  color: var(--text-primary);
+  background: var(--accent-soft);
 }
 
 body {
   margin: 0;
+  color: var(--text-primary);
+  background-color: var(--bg-canvas);
+  background-image: radial-gradient(var(--bg-grid-dot) 1px, transparent 1px);
+  background-size: 20px 20px;
 }
 
 button {
   padding: 0;
   margin: 0;
   font: inherit;
+  color: inherit;
+  appearance: none;
   cursor: pointer;
   user-select: none;
   background: transparent;
   border: 0;
-  appearance: none;
-}
-
-input[type="file"],
-input[type="radio"],
-input[type="checkbox"] {
-  display: none;
-}
-
-dl,
-dd {
-  margin: 0;
 }

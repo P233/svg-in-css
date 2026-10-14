@@ -13,7 +13,8 @@ export default defineConfig({
     alias: [{ find: "~", replacement: "/src/" }]
   },
   build: {
-    target: "esnext"
+    target: "esnext",
+    chunkSizeWarningLimit: 1000
   },
   server: {
     port: 3000

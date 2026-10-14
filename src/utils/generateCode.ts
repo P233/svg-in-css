@@ -20,12 +20,26 @@ export default function generateCode({
   enableWebkitPrefix,
   svgList
 }: AppState) {
-  const selectorPrefix = prefix || "icon";
+  const normalizedPrefix = prefix.trim().replace(/\s+/g, "-") || "icon";
+  const selectorPrefix = CSS.escape(normalizedPrefix);
+  const usedClassNames = new Set([normalizedPrefix]);
+  const classNames = new Map<SVGEntry, string>();
+
+  for (const svg of [...svgList].sort((a, b) => a.name.localeCompare(b.name))) {
+    const name = svg.name.trim().replace(/\s+/g, "-") || "svg";
+    const baseName = `${normalizedPrefix}-${name}`;
+    let className = baseName;
+    let suffix = 2;
+    while (usedClassNames.has(className)) className = `${baseName}-${suffix++}`;
+    usedClassNames.add(className);
+    classNames.set(svg, className);
+  }
 
   const stylelintComment = enableWebkitPrefix ? "/* stylelint-disable property-no-vendor-prefix */\n\n" : "";
+  const trimmedSize = size.trim();
 
   const shareProperties =
-    (size ? `\twidth: ${size};\n\theight: ${size};\n` : "") +
+    (trimmedSize ? `\twidth: ${trimmedSize};\n\theight: ${trimmedSize};\n` : "") +
     "\tbackground: currentcolor;\n" +
     `\t${enableWebkitPrefix ? "-webkit-" : ""}mask-repeat: no-repeat;\n` +
     `\t${enableWebkitPrefix ? "-webkit-" : ""}mask-position: center;`;
@@ -50,7 +64,7 @@ ${shareProperties}
     .map((i: SVGEntry) => {
       const svgURI = encodeSVG(enableSVGO ? i.optimizedSVG : i.originalSVG);
 
-      return `.${prefix ? prefix + "-" : ""}${i.name}${enableBeforePseudo ? "::before" : ""} {
+      return `.${CSS.escape(classNames.get(i)!)}${enableBeforePseudo ? "::before" : ""} {
 \t${enableWebkitPrefix ? "-webkit-" : ""}mask-image: url("${svgURI}");
 }`;
     })
