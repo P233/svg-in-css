@@ -200,7 +200,7 @@ const App: Component = () => {
   };
 
   const handleRemoveAll = () => {
-    if (confirm("Will remove all SVGs. Are you sure to continue?")) {
+    if (confirm("Remove all SVGs?")) {
       appStateModifiers.removeAllSVGs();
     }
   };
