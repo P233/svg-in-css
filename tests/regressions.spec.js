@@ -47,6 +47,31 @@ test("legacy blank names survive restore and remain importable", async ({ page }
   await expect(page.locator("[contenteditable]")).toHaveCount(3);
 });
 
+test("an invalid stored entry is dropped without discarding the rest of the project", async ({ page }) => {
+  const namespaced = '<svg:svg xmlns:svg="http://www.w3.org/2000/svg" viewBox="0 0 24 24"/>';
+  const state = {
+    prefix: "glyph",
+    size: "24px",
+    enableSVGO: true,
+    enableWebkitPrefix: true,
+    enableBeforePseudo: false,
+    svgList: [
+      { name: "kept", originalSVG: svg, optimizedSVG: svg },
+      { name: "broken", originalSVG: namespaced, optimizedSVG: namespaced }
+    ],
+    previewColor: "#000000",
+    configVersion: 1
+  };
+  await page.goto("/");
+  await page.evaluate((value) => localStorage.setItem("APP_STORE", JSON.stringify(value)), state);
+  await page.reload();
+  await expect(page.locator("[contenteditable]")).toHaveText(["kept"]);
+  await expect(page.locator("pre")).toContainText(".glyph-kept");
+  const stored = await page.evaluate(() => JSON.parse(localStorage.getItem("APP_STORE")));
+  expect(stored.prefix).toBe("glyph");
+  expect(stored.svgList.map((entry) => entry.name)).toEqual(["kept"]);
+});
+
 for (const key of ["Enter", "Escape"]) {
   for (const composition of [{ isComposing: true }, { keyCode: 229 }]) {
     test(`rename ignores ${key} during ${JSON.stringify(composition)}`, async ({ page }) => {

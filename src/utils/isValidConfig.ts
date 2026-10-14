@@ -1,6 +1,6 @@
 import Color from "color";
 
-function isValidSVGEntry(entry: unknown): entry is SVGEntry {
+export function isValidSVGEntry(entry: unknown): entry is SVGEntry {
   if (typeof entry !== "object" || entry === null) return false;
   const candidate = entry as Record<string, unknown>;
   return (

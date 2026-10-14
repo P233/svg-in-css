@@ -3,14 +3,11 @@ import { createStore, SetStoreFunction, Store } from "solid-js/store";
 
 const STORAGE_KEY = "APP_STORE";
 
-function loadStoredState<T extends object>(init: T, validate?: (value: unknown) => value is T): T {
+function loadStoredState<T extends object>(init: T, restore: (value: unknown) => T | undefined): T {
   try {
     const localState = localStorage.getItem(STORAGE_KEY);
     if (!localState) return init;
-    const parsed: unknown = JSON.parse(localState);
-    if (!validate || validate(parsed)) {
-      return parsed as T;
-    }
+    return restore(JSON.parse(localState)) ?? init;
   } catch {
     // Fallback to initial state when localStorage is unavailable or corrupted
   }
@@ -19,9 +16,9 @@ function loadStoredState<T extends object>(init: T, validate?: (value: unknown) 
 
 export default function createLocalStore<T extends object>(
   init: T,
-  validate?: (value: unknown) => value is T
+  restore: (value: unknown) => T | undefined
 ): [Store<T>, SetStoreFunction<T>] {
-  const [state, setState] = createStore<T>(loadStoredState(init, validate));
+  const [state, setState] = createStore<T>(loadStoredState(init, restore));
 
   createRoot(() => {
     createEffect(() => {

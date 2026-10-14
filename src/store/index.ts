@@ -1,5 +1,5 @@
 import { produce, reconcile } from "solid-js/store";
-import isValidConfig from "~/utils/isValidConfig";
+import isValidConfig, { isValidSVGEntry } from "~/utils/isValidConfig";
 import optimizeSVG from "~/utils/optimizeSVG";
 import createLocalStore from "./createLocalStore";
 
@@ -14,7 +14,21 @@ const defaultState: AppState = {
   configVersion: 1
 };
 
-const [appState, setAppState] = createLocalStore<AppState>(defaultState, isValidConfig);
+// Unlike an imported config.json, saved state drops an invalid icon on its own instead of discarding the whole project.
+function restoreStoredState(value: unknown): AppState | undefined {
+  if (typeof value !== "object" || value === null) return undefined;
+  const { svgList } = value as Record<string, unknown>;
+  if (!Array.isArray(svgList)) return undefined;
+
+  const validEntries = svgList.filter(isValidSVGEntry);
+  if (validEntries.length < svgList.length) {
+    console.warn(`Dropped ${svgList.length - validEntries.length} saved icon(s) that are not valid SVG.`);
+  }
+  const state = { ...value, svgList: validEntries };
+  return isValidConfig(state) ? state : undefined;
+}
+
+const [appState, setAppState] = createLocalStore<AppState>(defaultState, restoreStoredState);
 
 const appStateModifiers = {
   updatePrefix: (prefix: string) => {
