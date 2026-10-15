@@ -5,6 +5,8 @@ $icon-copy: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBo
 $icon-tick: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='%23000' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m5 14l3.5 3.5L19 6.5'/%3E%3C/svg%3E";
 $icon-download: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='%23000' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M3 17c0 .93 0 1.395.102 1.777a3 3 0 0 0 2.121 2.121C5.605 21 6.07 21 7 21h10c.93 0 1.395 0 1.776-.102a3 3 0 0 0 2.122-2.121C21 18.395 21 17.93 21 17m-4.5-5.5S13.186 16 12 16s-4.5-4.5-4.5-4.5M12 15V3'/%3E%3C/svg%3E";
 $icon-cancel: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='none' stroke='%23000' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M18 6L6 18m12 0L6 6'/%3E%3C/svg%3E";
+$icon-sun: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round'%3E%3Ccircle cx='12' cy='12' r='4'/%3E%3Cpath d='M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5'/%3E%3C/svg%3E";
+$icon-moon: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M20.5 14A8.5 8.5 0 0 1 10 3.5 8.5 8.5 0 1 0 20.5 14Z' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E";
 
 @mixin mask-icon($url) {
   background: currentcolor;
@@ -16,6 +18,85 @@ $icon-cancel: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' view
   mask-position: center;
   -webkit-mask-size: contain;
   mask-size: contain;
+}
+
+@mixin focus-ring($offset: 2px) {
+  outline: 2px solid var(--emphasis);
+  outline-offset: $offset;
+}
+
+@mixin action-button {
+  display: inline-flex;
+  flex: none;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  padding: 0 16px;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  user-select: none;
+  border: 1px solid transparent;
+  border-radius: var(--radius-control);
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+
+  &:focus-visible,
+  &:focus-within {
+    @include focus-ring;
+  }
+}
+
+@mixin primary-button {
+  @include action-button;
+
+  color: var(--emphasis-fg);
+  background: var(--emphasis);
+
+  &:hover {
+    background: var(--emphasis-hover);
+  }
+}
+
+@mixin secondary-button {
+  @include action-button;
+
+  color: var(--text-primary);
+  background: transparent;
+  border-color: var(--border-strong);
+
+  &:hover {
+    background: var(--bg-hover);
+  }
+}
+
+@mixin icon-button {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  color: var(--text-secondary);
+  border-radius: var(--radius-pill);
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+
+  @media (hover: hover) {
+    &:hover {
+      color: var(--text-primary);
+      background: var(--bg-hover);
+    }
+  }
+
+  &:focus-visible {
+    @include focus-ring;
+  }
 }
 
 .page {
@@ -36,9 +117,9 @@ $icon-cancel: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' view
   justify-content: center;
   pointer-events: none;
   background: var(--bg-overlay);
-  backdrop-filter: blur(6px);
-  border: 2px dashed var(--accent);
-  border-radius: 16px;
+  backdrop-filter: var(--backdrop-blur);
+  border: 2px dashed var(--emphasis);
+  border-radius: var(--radius-panel);
 
   &__card {
     display: flex;
@@ -57,7 +138,7 @@ $icon-cancel: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' view
   &__icon {
     width: 20px;
     height: 20px;
-    color: var(--accent-text);
+    color: var(--emphasis-text);
 
     @include mask-icon($icon-upload);
   }
@@ -65,7 +146,8 @@ $icon-cancel: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' view
 
 .topbar {
   flex: none;
-  background: var(--bg-surface);
+  background: var(--bg-primary);
+  backdrop-filter: var(--backdrop-blur);
   border-bottom: 1px solid var(--border-subtle);
 
   &__inner {
@@ -101,7 +183,7 @@ $icon-cancel: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' view
     > h1 {
       margin: 0;
       font-size: 19px;
-      font-weight: 700;
+      font-weight: 600;
       line-height: 24px;
       color: var(--text-primary);
       letter-spacing: -0.02em;
@@ -116,7 +198,7 @@ $icon-cancel: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' view
 
     > a {
       font-weight: 500;
-      color: var(--accent-text);
+      color: var(--emphasis-text);
       text-decoration: none;
 
       &:hover {
@@ -142,10 +224,10 @@ $icon-cancel: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' view
   justify-content: center;
   width: 38px;
   height: 38px;
-  color: var(--accent-text);
-  background: var(--accent-soft);
-  border: 1px solid var(--accent-border);
-  border-radius: 10px;
+  color: var(--emphasis-text);
+  background: var(--emphasis-soft);
+  border: 1px solid var(--emphasis-border);
+  border-radius: var(--radius-control);
 
   &::before {
     width: 20px;
@@ -168,6 +250,23 @@ $icon-cancel: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' view
   background: var(--bg-subtle);
   border: 1px solid var(--border-subtle);
   border-radius: 999px;
+}
+
+.themeIcon {
+  display: block;
+  width: 20px;
+  height: 20px;
+
+  @include mask-icon($icon-moon);
+
+  &[data-icon="sun"] {
+    -webkit-mask-image: url($icon-sun);
+    mask-image: url($icon-sun);
+  }
+}
+
+.themeToggle {
+  @include icon-button;
 }
 
 .storageWarning {
@@ -211,19 +310,16 @@ $icon-cancel: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' view
   padding: 52px 32px;
   text-align: center;
   background: var(--bg-surface);
-  border: 1.5px dashed var(--border-strong);
-  border-radius: 18px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-panel);
   box-shadow: var(--shadow-card);
   transition:
-    transform 0.2s ease,
     border-color 0.2s ease,
     background 0.2s ease;
 
-  &:hover,
   &.dropzoneActive {
-    background: var(--bg-subtle);
-    border-color: var(--accent);
-    transform: translateY(-2px);
+    background: var(--emphasis-soft);
+    border-color: var(--emphasis);
   }
 
   &__badge {
@@ -233,10 +329,10 @@ $icon-cancel: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' view
     width: 64px;
     height: 64px;
     margin-bottom: 20px;
-    color: var(--accent-text);
-    background: var(--accent-soft);
-    border: 1px solid var(--accent-border);
-    border-radius: 16px;
+    color: var(--emphasis-text);
+    background: var(--emphasis-soft);
+    border: 1px solid var(--emphasis-border);
+    border-radius: var(--radius-card);
   }
 
   &__icon {
@@ -249,7 +345,7 @@ $icon-cancel: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' view
   &__title {
     margin: 0;
     font-size: 20px;
-    font-weight: 700;
+    font-weight: 600;
     line-height: 28px;
     color: var(--text-primary);
     letter-spacing: -0.015em;
@@ -290,8 +386,8 @@ $icon-cancel: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' view
   min-height: 0;
   overflow: hidden;
   background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
-  border-radius: 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-panel);
   box-shadow: var(--shadow-card);
 
   &__header {
@@ -322,6 +418,8 @@ $icon-cancel: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' view
   &__toolbar {
     display: flex;
     flex: none;
+    flex-wrap: wrap;
+    gap: 8px 12px;
     align-items: center;
     justify-content: space-between;
     min-height: 46px;
@@ -346,19 +444,10 @@ $icon-cancel: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' view
 }
 
 .addSvgButton {
-  display: inline-flex;
+  @include primary-button;
+
   gap: 5px;
-  align-items: center;
-  height: 30px;
   padding: 0 12px;
-  font-size: 12.5px;
-  font-weight: 600;
-  color: var(--accent-fg);
-  cursor: pointer;
-  user-select: none;
-  background: var(--accent);
-  border-radius: 8px;
-  transition: background 0.15s ease;
 
   &::before {
     width: 14px;
@@ -367,46 +456,43 @@ $icon-cancel: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' view
 
     @include mask-icon($icon-add);
   }
-
-  &:hover {
-    background: var(--accent-hover);
-  }
-
-  &:focus-visible,
-  &:focus-within {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
-  }
 }
 
 .colorSetting {
   display: inline-flex;
   gap: 8px;
   align-items: center;
-  font-size: 12px;
-  font-weight: 500;
+  font-size: 11px;
+  font-weight: 600;
   color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
   cursor: pointer;
   user-select: none;
 
   &__label {
-    color: var(--text-muted);
+    color: var(--text-secondary);
   }
 
   &__picker {
     display: inline-flex;
-    gap: 6px;
+    gap: 8px;
     align-items: center;
-    height: 26px;
-    padding: 0 8px 0 5px;
+    height: 32px;
+    padding: 0 10px;
     background: var(--bg-surface);
     border: 1px solid var(--border-control);
-    border-radius: 6px;
+    border-radius: var(--radius-control);
     box-shadow: var(--shadow-control);
     transition: border-color 0.15s ease;
 
     &:hover {
-      border-color: var(--border-strong);
+      border-color: var(--emphasis);
+    }
+
+    &:focus-within {
+      border-color: var(--emphasis);
+      box-shadow: 0 0 0 1px var(--emphasis);
     }
   }
 
@@ -420,6 +506,7 @@ $icon-cancel: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' view
     background: transparent;
     border: 1px solid rgb(128 128 128 / 45%);
     border-radius: 4px;
+    outline: none;
 
     &::-webkit-color-swatch-wrapper {
       padding: 0;
@@ -432,10 +519,12 @@ $icon-cancel: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' view
 
   &__hex {
     font-family: var(--font-mono);
-    font-size: 11.5px;
+    font-size: 13px;
+    font-weight: 400;
     font-variant-numeric: tabular-nums;
     color: var(--text-primary);
     text-transform: uppercase;
+    letter-spacing: normal;
   }
 }
 
@@ -446,11 +535,14 @@ $icon-cancel: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' view
 }
 
 .toolbarButton {
-  padding: 2px 6px;
+  display: inline-flex;
+  align-items: center;
+  height: 24px;
+  padding: 0 8px;
   font-size: 12px;
-  font-weight: 500;
-  color: var(--text-secondary);
-  border-radius: 5px;
+  font-weight: 600;
+  color: var(--emphasis-text);
+  border-radius: 6px;
   transition:
     color 0.15s ease,
     background 0.15s ease;
@@ -461,7 +553,7 @@ $icon-cancel: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' view
   }
 
   &:focus-visible {
-    outline: 2px solid var(--accent);
+    outline: 2px solid var(--emphasis);
     outline-offset: 1px;
   }
 
@@ -486,7 +578,7 @@ $icon-cancel: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' view
   gap: 10px;
   align-items: center;
   padding: 6px 8px;
-  border-radius: 9px;
+  border-radius: var(--radius-control);
   transition: background 0.12s ease;
 
   &__tile {
@@ -498,7 +590,7 @@ $icon-cancel: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' view
     height: 36px;
     background: var(--tile-light-bg);
     border: 1px solid var(--tile-light-border);
-    border-radius: 8px;
+    border-radius: var(--radius-control);
     transition: background 0.12s ease;
 
     &.tileDark {
@@ -546,7 +638,7 @@ $icon-cancel: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' view
       text-overflow: clip;
       scrollbar-width: none;
       background: var(--bg-surface);
-      outline: 2px solid var(--accent);
+      outline: 2px solid var(--emphasis);
       outline-offset: 1px;
     }
   }
@@ -567,7 +659,7 @@ $icon-cancel: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' view
     width: 28px;
     height: 28px;
     color: var(--text-muted);
-    border-radius: 6px;
+    border-radius: var(--radius-pill);
     opacity: 0;
     transition:
       opacity 0.12s ease,
@@ -582,7 +674,7 @@ $icon-cancel: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' view
     }
 
     &:focus-visible {
-      outline: 2px solid var(--accent);
+      outline: 2px solid var(--emphasis);
       outline-offset: 1px;
     }
   }
@@ -647,8 +739,8 @@ $icon-cancel: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' view
   min-height: 0;
   overflow: hidden;
   background: var(--bg-surface);
-  border: 1px solid var(--border-subtle);
-  border-radius: 14px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-panel);
   box-shadow: var(--shadow-card);
 }
 
@@ -681,33 +773,38 @@ $icon-cancel: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' view
 
     > label,
     .settingsBar__label {
-      font-size: 12.5px;
+      font-size: 11px;
       font-weight: 600;
       color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
     }
 
     .settingsBar__label[data-mono="true"] {
       font-family: var(--font-mono);
       font-size: 12px;
+      text-transform: none;
+      letter-spacing: normal;
     }
   }
 }
 
 .input {
   width: 96px;
-  height: 30px;
-  padding: 2px 10px;
+  height: 32px;
+  padding: 0 10px;
   margin: 0;
   font-family: var(--font-mono);
-  font-size: 12.5px;
+  font-size: 13px;
   line-height: 24px;
   color: var(--text-primary);
   appearance: none;
   background: var(--bg-surface);
   border: 1px solid var(--border-control);
-  border-radius: 7px;
-  box-shadow: var(--shadow-control);
-  transition: border-color 0.15s ease;
+  border-radius: var(--radius-control);
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 
   &[data-size="compact"] {
     width: 74px;
@@ -717,50 +814,48 @@ $icon-cancel: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' view
     color: var(--text-muted);
   }
 
-  &:hover {
-    border-color: var(--border-strong);
-  }
-
   &:focus {
-    border-color: var(--accent);
-    outline: 2px solid var(--accent-soft);
-    outline-offset: 0;
+    border-color: var(--emphasis);
+    outline: none;
+    box-shadow: 0 0 0 1px var(--emphasis);
   }
 }
 
 .toggle {
   position: relative;
   display: inline-flex;
+  flex: none;
   align-items: center;
-  width: 40px;
-  height: 22px;
+  width: 34px;
+  height: 20px;
   padding: 2px;
   cursor: pointer;
   background: var(--toggle-off);
-  border-radius: 999px;
+  border-radius: var(--radius-pill);
+  box-shadow: inset 0 0 0 1px var(--border-control);
   transition: background 0.2s ease;
 
   &:focus-visible {
-    outline: 2px solid var(--accent);
+    outline: 2px solid var(--emphasis);
     outline-offset: 2px;
   }
 
   &__thumb {
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
     background: #fff;
     border-radius: 50%;
-    box-shadow:
-      0 1px 3px rgb(0 0 0 / 28%),
-      0 0 0 0.5px rgb(0 0 0 / 8%);
-    transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+    box-shadow: 0 1px 2px rgb(0 0 0 / 20%);
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   &.active {
-    background: var(--accent);
+    background: var(--emphasis);
+    box-shadow: none;
 
     .toggle__thumb {
-      transform: translateX(18px);
+      background: var(--emphasis-fg);
+      transform: translateX(14px);
     }
   }
 }
@@ -807,22 +902,10 @@ $icon-cancel: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' view
 }
 
 .downloadCssButton {
-  display: inline-flex;
+  @include secondary-button;
+
   gap: 6px;
-  align-items: center;
-  height: 30px;
   padding: 0 12px;
-  font-size: 12.5px;
-  font-weight: 500;
-  color: var(--text-secondary);
-  background: var(--bg-surface);
-  border: 1px solid var(--border-control);
-  border-radius: 7px;
-  box-shadow: var(--shadow-control);
-  transition:
-    color 0.15s ease,
-    background 0.15s ease,
-    border-color 0.15s ease;
 
   &::before {
     width: 14px;
@@ -831,34 +914,12 @@ $icon-cancel: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' view
 
     @include mask-icon($icon-download);
   }
-
-  &:hover {
-    color: var(--text-primary);
-    background: var(--bg-hover);
-    border-color: var(--border-strong);
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
-  }
 }
 
 .copyButton {
-  display: inline-flex;
+  @include primary-button;
+
   gap: 6px;
-  align-items: center;
-  justify-content: center;
-  height: 30px;
-  padding: 0 14px;
-  font-size: 12.5px;
-  font-weight: 600;
-  color: var(--accent-fg);
-  background: var(--accent);
-  border-radius: 7px;
-  transition:
-    background 0.15s ease,
-    color 0.15s ease;
 
   &::before {
     width: 14px;
@@ -868,17 +929,8 @@ $icon-cancel: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' view
     @include mask-icon($icon-copy);
   }
 
-  &:hover {
-    background: var(--accent-hover);
-  }
-
-  &:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
-  }
-
   &.copied {
-    color: #fff;
+    color: var(--emphasis-fg);
     background: var(--success);
 
     &::before {
@@ -898,13 +950,35 @@ $icon-cancel: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' view
   padding: 20px;
   margin: 0;
   font-family: var(--font-mono);
-  font-size: 13.5px;
+  font-size: 13px;
   hyphens: none;
-  line-height: 22px;
+  line-height: 20px;
   color: var(--syntax-base);
   word-wrap: break-word;
   tab-size: 4;
   white-space: pre-wrap;
+
+  :global(.token.selector) {
+    font-weight: 600;
+    color: var(--syntax-selector);
+  }
+
+  :global(.token.property) {
+    color: var(--syntax-property);
+  }
+
+  :global(.token.function) {
+    color: var(--syntax-function);
+  }
+
+  :global(.token.string) {
+    color: var(--syntax-string);
+  }
+
+  :global(.token.comment) {
+    font-style: oblique;
+    color: var(--syntax-comment);
+  }
 }
 
 .fileInput {
@@ -919,96 +993,19 @@ $icon-cancel: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' view
 }
 
 .buttonPrimary {
-  display: inline-flex;
-  gap: 8px;
-  align-items: center;
-  justify-content: center;
-  height: 40px;
-  padding: 0 20px;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--accent-fg);
-  cursor: pointer;
-  user-select: none;
-  background: var(--accent);
-  border-radius: 10px;
-  transition: background 0.15s ease;
-
-  &:hover {
-    background: var(--accent-hover);
-  }
-
-  &:focus-visible,
-  &:focus-within {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
-  }
+  @include primary-button;
 }
 
 .buttonSecondary {
-  display: inline-flex;
-  gap: 8px;
-  align-items: center;
-  justify-content: center;
-  height: 40px;
-  padding: 0 20px;
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--text-primary);
-  cursor: pointer;
-  user-select: none;
-  background: var(--bg-surface);
-  border: 1px solid var(--border-control);
-  border-radius: 10px;
-  box-shadow: var(--shadow-control);
-  transition:
-    background 0.15s ease,
-    border-color 0.15s ease;
-
-  &:hover {
-    background: var(--bg-subtle);
-    border-color: var(--border-strong);
-  }
-
-  &:focus-visible,
-  &:focus-within {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
-  }
+  @include secondary-button;
 }
 
 .buttonGhost {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: 32px;
+  @include secondary-button;
+
   padding: 0 12px;
-  font-size: 13px;
   font-weight: 500;
-  color: var(--text-secondary);
   text-decoration: none;
-  cursor: pointer;
-  user-select: none;
-  background: var(--bg-surface);
-  border: 1px solid var(--border-control);
-  border-radius: 8px;
-  box-shadow: var(--shadow-control);
-  transition:
-    color 0.15s ease,
-    background 0.15s ease,
-    border-color 0.15s ease;
-
-  &:hover {
-    color: var(--text-primary);
-    background: var(--bg-subtle);
-    border-color: var(--border-strong);
-  }
-
-  &:focus-visible,
-  &:focus-within {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
-  }
 }
 
 @media (width <= 1023px) {
@@ -1041,32 +1038,15 @@ $icon-cancel: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' view
   }
 }
 
+@media (width <= 680px) {
+  .input {
+    font-size: 16px;
+  }
+}
+
 @media (hover: none) {
   .svgEntry__download,
   .svgEntry__remove {
     opacity: 1;
-  }
-}
-
-:global {
-  .selector {
-    color: var(--syntax-selector);
-  }
-
-  .property {
-    color: var(--syntax-property);
-  }
-
-  .function {
-    color: var(--syntax-function);
-  }
-
-  .string {
-    color: var(--syntax-string);
-  }
-
-  .comment {
-    font-style: oblique;
-    color: var(--syntax-comment);
   }
 }

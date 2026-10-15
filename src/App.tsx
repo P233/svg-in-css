@@ -10,6 +10,17 @@ import css from "~/styles/styles.module.scss";
 import { version } from "../package.json";
 import type { Component, JSX } from "solid-js";
 
+const THEME_STORAGE_KEY = "SVG_IN_CSS_THEME";
+
+const saveTheme = (theme: "light" | "dark" | null) => {
+  try {
+    if (theme === null) localStorage.removeItem(THEME_STORAGE_KEY);
+    else localStorage.setItem(THEME_STORAGE_KEY, theme);
+  } catch {
+    // Theme switching remains available when browser storage is disabled.
+  }
+};
+
 const downloadFile = (filename: string, content: string) => {
   const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
   const url = URL.createObjectURL(blob);
@@ -45,6 +56,33 @@ const Toggle = (props: { isActive: boolean; labelledBy: string; onClick: () => v
 const App: Component = () => {
   const { appState, appStateModifiers, persistenceError } = store;
 
+  const systemTheme = window.matchMedia("(prefers-color-scheme: dark)");
+  let initialIsDarkTheme = systemTheme.matches;
+  try {
+    const savedTheme = localStorage.getItem(THEME_STORAGE_KEY);
+    if (savedTheme === "light" || savedTheme === "dark") initialIsDarkTheme = savedTheme === "dark";
+  } catch {
+    // Use the system theme when browser storage is unavailable.
+  }
+  const [isDarkTheme, setIsDarkTheme] = createSignal(initialIsDarkTheme);
+  const themeToggleLabel = () => `Switch to ${isDarkTheme() ? "light" : "dark"} theme`;
+
+  createEffect(() => {
+    document.documentElement.dataset.theme = isDarkTheme() ? "dark" : "light";
+  });
+
+  const handleSystemThemeChange = (event: MediaQueryListEvent) => {
+    setIsDarkTheme(event.matches);
+    saveTheme(null);
+  };
+  systemTheme.addEventListener("change", handleSystemThemeChange);
+
+  const handleToggleTheme = () => {
+    const theme = isDarkTheme() ? "light" : "dark";
+    setIsDarkTheme(theme === "dark");
+    saveTheme(theme);
+  };
+
   const [isDragging, setIsDragging] = createSignal(false);
   const [isCopied, setIsCopied] = createSignal(false);
   let copyTimer: ReturnType<typeof setTimeout> | undefined;
@@ -59,6 +97,8 @@ const App: Component = () => {
   onCleanup(() => {
     cancelPendingImports();
     if (copyTimer) clearTimeout(copyTimer);
+    systemTheme.removeEventListener("change", handleSystemThemeChange);
+    delete document.documentElement.dataset.theme;
   });
 
   const code = createMemo(() => {
@@ -332,6 +372,15 @@ const App: Component = () => {
             <a class={css.buttonGhost} href="https://github.com/P233/svg-in-css">
               GitHub
             </a>
+            <button
+              type="button"
+              class={css.themeToggle}
+              onClick={handleToggleTheme}
+              aria-label={themeToggleLabel()}
+              title={themeToggleLabel()}
+            >
+              <span class={css.themeIcon} data-icon={isDarkTheme() ? "sun" : "moon"} aria-hidden="true" />
+            </button>
           </div>
         </div>
       </header>
@@ -592,13 +641,18 @@ const App: Component = () => {
       <Toaster
         position="top-center"
         toastOptions={{
+          iconTheme: {
+            primary: "var(--text-primary)",
+            secondary: "var(--bg-surface)"
+          },
           style: {
-            "font-size": "13.5px",
+            "font-size": "13px",
             "font-weight": "500",
+            "line-height": "20px",
             color: "var(--text-primary)",
             background: "var(--bg-surface)",
             border: "1px solid var(--border-strong)",
-            "border-radius": "10px",
+            "border-radius": "var(--radius-card)",
             "box-shadow": "var(--shadow-float)"
           }
         }}

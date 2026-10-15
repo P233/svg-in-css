@@ -1,98 +1,98 @@
 :root {
-  color-scheme: light dark;
+  color-scheme: light;
 
+  --font-sans: ui-sans-serif, -apple-system, blinkmacsystemfont, "Segoe UI", roboto, sans-serif;
+  --font-mono: ui-monospace, sfmono-regular, menlo, monaco, consolas, monospace;
+  --radius-panel: 16px;
   --radius-card: 12px;
-  --font-sans:
-    system-ui, -apple-system, blinkmacsystemfont, "Segoe UI", roboto, "Helvetica Neue", arial, sans-serif,
-    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-  --font-mono:
-    ui-monospace, "SF Mono", sfmono-regular, menlo, monaco, "Cascadia Code", "JetBrains Mono", consolas,
-    "Liberation Mono", monospace;
-  --bg-canvas: #f4f5f8;
-  --bg-grid-dot: rgb(15 23 42 / 8%);
+  --radius-control: 8px;
+  --radius-pill: 9999px;
+  --bg-canvas: #f5f5f7;
+  --bg-primary: rgb(255 255 255 / 90%);
   --bg-surface: #fff;
-  --bg-subtle: #f1f3f7;
-  --bg-hover: #e7eaf1;
-  --bg-active: #dce0ea;
-  --bg-code: #fff;
-  --bg-overlay: rgb(244 245 248 / 82%);
-  --border-subtle: #e2e5ee;
-  --border-control: #cfd5e2;
-  --border-strong: #b8c0d2;
-  --text-primary: #111521;
-  --text-secondary: #43495e;
-  --text-muted: #5b6178;
-  --accent: #4f46e5;
-  --accent-hover: #4338ca;
-  --accent-text: #4f46e5;
-  --accent-fg: #fff;
-  --accent-soft: rgb(79 70 229 / 9%);
-  --accent-border: rgb(79 70 229 / 28%);
-  --toggle-off: #bfc6d6;
-  --tile-light-bg: #f1f3f7;
+  --bg-subtle: #f5f5f7;
+  --bg-hover: rgb(24 24 27 / 5%);
+  --bg-active: rgb(24 24 27 / 8%);
+  --bg-code: var(--bg-surface);
+  --bg-overlay: var(--bg-primary);
+  --backdrop-blur: blur(20px) saturate(180%);
+  --border-subtle: rgb(24 24 27 / 6%);
+  --border-control: #8a8a92;
+  --border-strong: rgb(24 24 27 / 12%);
+  --text-primary: #18181b;
+  --text-secondary: #52525b;
+  --text-muted: #6b6b74;
+  --emphasis: #2563eb;
+  --emphasis-hover: #1d4ed8;
+  --emphasis-text: #1d4ed8;
+  --emphasis-fg: #fff;
+  --emphasis-soft: rgb(37 99 235 / 10%);
+  --emphasis-border: rgb(37 99 235 / 25%);
+  --toggle-off: #d4d4d8;
+  --tile-light-bg: #f5f5f7;
   --tile-light-hover-bg: #fff;
-  --tile-light-border: rgb(15 23 42 / 10%);
-  --tile-dark-bg: #181b28;
-  --tile-dark-hover-bg: #181b28;
-  --tile-dark-border: rgb(15 23 42 / 20%);
-  --success: #047857;
-  --status-dot: #10b981;
-  --danger: #be123c;
-  --danger-soft: rgb(190 18 60 / 9%);
-  --shadow-card: 0 1px 2px rgb(15 23 42 / 5%), 0 8px 24px -6px rgb(15 23 42 / 6%);
-  --shadow-control: 0 1px 2px rgb(15 23 42 / 4%);
-  --shadow-float: 0 20px 40px -12px rgb(15 23 42 / 18%);
-  --syntax-base: #363c52;
+  --tile-light-border: rgb(24 24 27 / 10%);
+  --tile-dark-bg: #232328;
+  --tile-dark-hover-bg: #232328;
+  --tile-dark-border: rgb(24 24 27 / 20%);
+  --success: var(--emphasis);
+  --status-dot: var(--text-primary);
+  --danger: var(--text-primary);
+  --danger-soft: var(--bg-active);
+  --shadow-card: 0 2px 6px rgb(0 0 0 / 5%), 0 20px 48px -8px rgb(0 0 0 / 20%);
+  --shadow-control: none;
+  --shadow-float: var(--shadow-card);
+  --syntax-base: var(--text-primary);
   --syntax-selector: #1d4ed8;
-  --syntax-property: #be185d;
-  --syntax-function: #6d28d9;
-  --syntax-string: #047857;
-  --syntax-comment: #636980;
+  --syntax-property: #7e22ce;
+  --syntax-function: #9a3412;
+  --syntax-string: #166534;
+  --syntax-comment: var(--text-muted);
+}
+
+@mixin dark-theme {
+  color-scheme: dark;
+
+  --bg-canvas: #18181b;
+  --bg-primary: rgb(28 28 32 / 90%);
+  --bg-surface: #1c1c20;
+  --bg-subtle: #232328;
+  --bg-hover: rgb(255 255 255 / 6%);
+  --bg-active: rgb(255 255 255 / 10%);
+  --border-subtle: rgb(255 255 255 / 6%);
+  --border-control: #71717a;
+  --border-strong: rgb(255 255 255 / 12%);
+  --text-primary: #f4f4f5;
+  --text-secondary: #a1a1aa;
+  --text-muted: #93939b;
+  --emphasis: #60a5fa;
+  --emphasis-hover: #93c5fd;
+  --emphasis-text: #93c5fd;
+  --emphasis-fg: #18181b;
+  --emphasis-soft: rgb(96 165 250 / 12%);
+  --emphasis-border: rgb(96 165 250 / 30%);
+  --toggle-off: #3f3f46;
+  --tile-light-bg: #f4f4f5;
+  --tile-light-hover-bg: #fafafa;
+  --tile-light-border: rgb(255 255 255 / 16%);
+  --tile-dark-bg: #232328;
+  --tile-dark-hover-bg: #3f3f46;
+  --tile-dark-border: rgb(255 255 255 / 12%);
+  --shadow-card: 0 2px 8px rgb(0 0 0 / 30%), 0 24px 56px -8px rgb(0 0 0 / 60%);
+  --syntax-selector: #93c5fd;
+  --syntax-property: #d8b4fe;
+  --syntax-function: #fdba74;
+  --syntax-string: #86efac;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --bg-canvas: #0a0b10;
-    --bg-grid-dot: rgb(148 163 184 / 10%);
-    --bg-surface: #12141d;
-    --bg-subtle: #181b26;
-    --bg-hover: #212534;
-    --bg-active: #2a2f42;
-    --bg-code: #0e1017;
-    --bg-overlay: rgb(10 11 16 / 82%);
-    --border-subtle: #232738;
-    --border-control: #2e344a;
-    --border-strong: #3b425e;
-    --text-primary: #f1f3f9;
-    --text-secondary: #a8b0c8;
-    --text-muted: #7c84a3;
-    --accent: #585ce5;
-    --accent-hover: #4f46e5;
-    --accent-text: #818cf8;
-    --accent-fg: #fff;
-    --accent-soft: rgb(99 102 241 / 15%);
-    --accent-border: rgb(129 140 248 / 36%);
-    --toggle-off: #323850;
-    --tile-light-bg: #e6e9f2;
-    --tile-light-hover-bg: #eef0f7;
-    --tile-light-border: rgb(255 255 255 / 16%);
-    --tile-dark-bg: #1c2030;
-    --tile-dark-hover-bg: #24293d;
-    --tile-dark-border: rgb(255 255 255 / 12%);
-    --success: #047857;
-    --status-dot: #10b981;
-    --danger: #fb7185;
-    --danger-soft: rgb(251 113 133 / 14%);
-    --shadow-card: 0 1px 3px rgb(0 0 0 / 40%), 0 14px 34px -6px rgb(0 0 0 / 55%);
-    --shadow-control: 0 1px 2px rgb(0 0 0 / 25%);
-    --shadow-float: 0 24px 48px -12px rgb(0 0 0 / 70%);
-    --syntax-base: #c8cee8;
-    --syntax-selector: #60a5fa;
-    --syntax-property: #f472b6;
-    --syntax-function: #c084fc;
-    --syntax-string: #34d399;
-    --syntax-comment: #7d85a6;
+  :root:not([data-theme]) {
+    @include dark-theme;
   }
+}
+
+:root[data-theme="dark"] {
+  @include dark-theme;
 }
 
 *,
@@ -112,15 +112,13 @@ html {
 
 ::selection {
   color: var(--text-primary);
-  background: var(--accent-soft);
+  background: var(--emphasis-soft);
 }
 
 body {
   margin: 0;
   color: var(--text-primary);
   background-color: var(--bg-canvas);
-  background-image: radial-gradient(var(--bg-grid-dot) 1px, transparent 1px);
-  background-size: 20px 20px;
 }
 
 button {
