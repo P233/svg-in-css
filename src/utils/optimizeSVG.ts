@@ -1,7 +1,8 @@
 import { optimize } from "svgo/browser";
+import isValidSVG from "./isValidSVG";
 
 export default function optimizeSVG(svg: string, name: string): string {
-  if (!/<svg[\s>]/i.test(svg)) {
+  if (!isValidSVG(svg)) {
     throw new Error("Invalid SVG content");
   }
 
@@ -16,7 +17,7 @@ export default function optimizeSVG(svg: string, name: string): string {
     ]
   });
 
-  if (!data.trim() || !/<svg[\s>]/i.test(data)) {
+  if (!isValidSVG(data)) {
     throw new Error("Empty or invalid SVG");
   }
 

@@ -1,15 +1,6 @@
-// This function is directly borrowed from github.com/yoksel/url-encoder
-// https://github.com/yoksel/url-encoder/blob/master/src/js/script.js#LL133-L147C2
+// URL escaping adapted from https://github.com/yoksel/url-encoder.
 export function encodeSVG(data: string) {
-  // Use single quotes instead of double to avoid encoding.
-  data = data.replace(/"/g, `'`);
-
-  data = data.replace(/>\s{1,}</g, `><`);
-  data = data.replace(/\s{2,}/g, ` `);
-
-  // Using encodeURIComponent() as replacement function
-  // allows to keep result code readable
-  return "data:image/svg+xml," + data.replace(/[\r\n%#()<>?[\\\]^`{|}]/g, encodeURIComponent);
+  return "data:image/svg+xml," + data.replace(/[\t\r\n%#()"<>?[\\\]^`{|}]/g, encodeURIComponent);
 }
 
 export default function generateCode({

@@ -1,4 +1,4 @@
-import { createSignal, createMemo, onCleanup, Show, For } from "solid-js";
+import { createSignal, createMemo, createEffect, onCleanup, Show, For } from "solid-js";
 import Color from "color";
 import toast, { Toaster } from "solid-toast";
 import Prism from "prismjs";
@@ -43,13 +43,21 @@ const Toggle = (props: { isActive: boolean; labelledBy: string; onClick: () => v
 );
 
 const App: Component = () => {
-  const { appState, appStateModifiers } = store;
+  const { appState, appStateModifiers, persistenceError } = store;
 
   const [isDragging, setIsDragging] = createSignal(false);
   const [isCopied, setIsCopied] = createSignal(false);
   let copyTimer: ReturnType<typeof setTimeout> | undefined;
+  let importGeneration = 0;
+  let configRequestId = 0;
+
+  const cancelPendingImports = () => {
+    importGeneration++;
+    configRequestId++;
+  };
 
   onCleanup(() => {
+    cancelPendingImports();
     if (copyTimer) clearTimeout(copyTimer);
   });
 
@@ -64,6 +72,15 @@ const App: Component = () => {
   });
   const hasSVGs = createMemo(() => {
     return !!appState.svgList.length;
+  });
+  createEffect(() => {
+    if (!persistenceError() || !hasSVGs()) return;
+    const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      event.preventDefault();
+      event.returnValue = "true";
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    onCleanup(() => window.removeEventListener("beforeunload", handleBeforeUnload));
   });
   const parsedPreviewColor = createMemo(() => {
     try {
@@ -81,32 +98,41 @@ const App: Component = () => {
 
   const handleUploadSVG = async (file: File) => {
     if (!/\.svg$/i.test(file.name)) return;
+    const generation = importGeneration;
 
     try {
       const name = file.name.replace(/\.svg$/i, "").trim() || "svg";
       const originalSVG = await file.text();
+      if (generation !== importGeneration) return;
       appStateModifiers.addSVG({
         name,
         originalSVG,
         optimizedSVG: optimizeSVG(originalSVG, name)
       });
     } catch (err) {
-      toast.error(`${file.name}: ${err instanceof Error ? err.message : String(err)}`);
+      if (generation === importGeneration) {
+        toast.error(`${file.name}: ${err instanceof Error ? err.message : String(err)}`);
+      }
     }
   };
 
   const handleUploadConfigFile = async (file: File) => {
+    const requestId = ++configRequestId;
     try {
       const text = await file.text();
+      if (requestId !== configRequestId) return;
       const config: unknown = JSON.parse(text);
       if (isValidConfig(config)) {
+        importGeneration++;
         appStateModifiers.restoreConfig(config);
         toast.success("Configuration restored");
       } else {
         throw new Error("Invalid config.json");
       }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : String(err));
+      if (requestId === configRequestId) {
+        toast.error(err instanceof Error ? err.message : String(err));
+      }
     }
   };
 
@@ -201,6 +227,7 @@ const App: Component = () => {
 
   const handleRemoveAll = () => {
     if (confirm("Remove all SVGs?")) {
+      cancelPendingImports();
       appStateModifiers.removeAllSVGs();
     }
   };
@@ -308,6 +335,19 @@ const App: Component = () => {
           </div>
         </div>
       </header>
+
+      <Show when={persistenceError()}>
+        <div class={css.storageWarning} role="alert">
+          <span>
+            {persistenceError()?.name === "QuotaExceededError"
+              ? "Browser storage is full. Export your config before leaving this page."
+              : "Changes cannot be saved in this browser. Export your config before leaving this page."}
+          </span>
+          <button type="button" class={css.buttonSecondary} onClick={handleDownloadConfigJSON}>
+            Export config
+          </button>
+        </div>
+      </Show>
 
       <Show
         when={hasSVGs()}

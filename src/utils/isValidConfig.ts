@@ -1,4 +1,5 @@
 import Color from "color";
+import isValidSVG from "./isValidSVG";
 
 export function isValidSVGEntry(entry: unknown): entry is SVGEntry {
   if (typeof entry !== "object" || entry === null) return false;
@@ -6,9 +7,9 @@ export function isValidSVGEntry(entry: unknown): entry is SVGEntry {
   return (
     typeof candidate.name === "string" &&
     typeof candidate.originalSVG === "string" &&
-    /<svg[\s>]/i.test(candidate.originalSVG) &&
+    isValidSVG(candidate.originalSVG) &&
     typeof candidate.optimizedSVG === "string" &&
-    /<svg[\s>]/i.test(candidate.optimizedSVG)
+    isValidSVG(candidate.optimizedSVG)
   );
 }
 

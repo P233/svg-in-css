@@ -20,15 +20,16 @@ function restoreStoredState(value: unknown): AppState | undefined {
   const { svgList } = value as Record<string, unknown>;
   if (!Array.isArray(svgList)) return undefined;
 
+  const state = { ...value, svgList: [] };
+  if (!isValidConfig(state)) return undefined;
   const validEntries = svgList.filter(isValidSVGEntry);
   if (validEntries.length < svgList.length) {
     console.warn(`Dropped ${svgList.length - validEntries.length} saved icon(s) that are not valid SVG.`);
   }
-  const state = { ...value, svgList: validEntries };
-  return isValidConfig(state) ? state : undefined;
+  return { ...state, svgList: validEntries };
 }
 
-const [appState, setAppState] = createLocalStore<AppState>(defaultState, restoreStoredState);
+const [appState, setAppState, persistenceError] = createLocalStore<AppState>(defaultState, restoreStoredState);
 
 const appStateModifiers = {
   updatePrefix: (prefix: string) => {
@@ -80,4 +81,4 @@ const appStateModifiers = {
   }
 };
 
-export default { appState, appStateModifiers };
+export default { appState, appStateModifiers, persistenceError };

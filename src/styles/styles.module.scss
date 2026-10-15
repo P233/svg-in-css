@@ -170,6 +170,28 @@ $icon-cancel: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' view
   border-radius: 999px;
 }
 
+.storageWarning {
+  display: flex;
+  flex: none;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  width: calc(100% - 48px);
+  max-width: 1392px;
+  padding: 12px 16px;
+  margin: 16px auto 0;
+  font-size: 13px;
+  line-height: 20px;
+  color: var(--text-primary);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-card);
+
+  > span {
+    flex: 1 1 240px;
+  }
+}
+
 .emptyStage {
   display: flex;
   flex: 1;
@@ -998,6 +1020,10 @@ $icon-cancel: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' view
 
   .topbar__inner {
     padding: 12px 16px;
+  }
+
+  .storageWarning {
+    width: calc(100% - 32px);
   }
 
   .workbench {
